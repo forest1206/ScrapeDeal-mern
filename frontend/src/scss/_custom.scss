@@ -1,0 +1,42 @@
+// -------------------------
+// --- You can add your custom CSS here and it will overwrite template styles.
+// -------------------------
+.bids-list__item {
+    border-bottom: 1px solid #ebebeb;
+
+    .bid {
+        padding: 20px;
+
+        .bid__author {
+            margin-top: -4px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .bid__amount {
+
+        }
+
+        .bid__text {
+            font-size: 16px;
+            margin-top: 12px;
+        }
+
+        .bid__date {
+
+        }
+    }
+
+    &.active {
+        box-shadow: 0 0 0 2px #ffd333 inset;
+    }
+
+    &.accepted {
+        box-shadow: 0 0 0 2px #dc3545 inset;
+    }
+}
+
+.input-error-text {
+    margin-top: 8px;
+    color: #eb3730;
+}
