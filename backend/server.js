@@ -5,6 +5,9 @@ import colors from "colors"; // console with colors
 import morgan from "morgan";
 import cors from "cors";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+import { graphqlHTTP } from "express-graphql";
+import { buildSchema } from "graphql";
+
 import connectDB from "./config/db.js";
 
 import productRoutes from "./routes/productRoutes.js";
@@ -44,10 +47,27 @@ app.get("/", (req, res) => {
   res.send("API is running....");
 });
 
+const PORT = process.env.PORT || 5000;
+
+const schema = buildSchema(`
+  type Query {
+    hello: String
+  }
+`);
+
+const root = { hello: () => "Hello world!" };
+
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+  })
+);
+
 app.use(notFound);
 app.use(errorHandler);
-
-const PORT = process.env.PORT || 5000;
 
 app.listen(
   PORT,
@@ -56,3 +76,37 @@ app.listen(
       .yellow.bold
   )
 );
+
+// import { ApolloServer, gql } from "apollo-server";
+
+// const books = [
+//   {
+//     title: "The Awakening",
+//     author: "Kate Chopin",
+//   },
+//   {
+//     title: "City of Glass",
+//     author: "Paul Auster",
+//   },
+// ];
+// const typeDefs = gql`
+//   type Book {
+//     title: String
+//     author: String
+//   }
+//   type Query {
+//     books: [Book]
+//   }
+// `;
+// const resolvers = {
+//   Query: {
+//     books: () => books,
+//   },
+// };
+
+// const server = new ApolloServer({ typeDefs, resolvers });
+
+// // The `listen` method launches a web server.
+// server.listen().then(({ url }) => {
+//   console.log(`🚀  Server ready at ${url}`);
+// });
