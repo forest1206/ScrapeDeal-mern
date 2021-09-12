@@ -9,6 +9,7 @@ import Bid from "./models/Bid.js";
 import Category from "./models/Category.js";
 import Product from "./models/Product.js";
 import connectDB from "./config/db.js";
+import colors from "colors"; // console with colors
 
 dotenv.config();
 

@@ -1,7 +1,7 @@
 import path from "path";
 import express from "express";
 import dotenv from "dotenv";
-import colors from "colors";
+import colors from "colors"; // console with colors
 import morgan from "morgan";
 import cors from "cors";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
