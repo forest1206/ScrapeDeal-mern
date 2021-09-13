@@ -9,7 +9,10 @@ import connectDB from "./config/db.js";
 import { ApolloServer, gql } from "apollo-server-express";
 import http from "http";
 
-import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
+import {
+  ApolloServerPluginLandingPageGraphQLPlayground,
+  ApolloServerPluginLandingPageDisabled,
+} from "apollo-server-core";
 
 import productRoutes from "./routes/productRoutes.js";
 import bidRoutes from "./routes/bidRoutes.js";
@@ -26,7 +29,7 @@ const port = process.env.PORT || 8000;
 const isProduction = process.env.NODE_ENV === "production";
 
 async function startServer(typeDefs, resolvers) {
-  connectDB();
+  await connectDB();
 
   const app = express();
 
@@ -57,9 +60,16 @@ async function startServer(typeDefs, resolvers) {
 
   const httpServer = http.createServer(app);
   const apolloServer = new ApolloServer({
+    introspection: true,
     typeDefs,
     resolvers,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    plugins: [
+      // ApolloServerPluginDrainHttpServer({ httpServer }),
+      ApolloServerPluginLandingPageGraphQLPlayground({
+        cdnUrl: "http://localhost/npm",
+      }),
+      ApolloServerPluginLandingPageDisabled(),
+    ],
   });
   await apolloServer.start();
   apolloServer.applyMiddleware({ app, path: "/graphql" });
@@ -68,7 +78,6 @@ async function startServer(typeDefs, resolvers) {
   app.use(errorHandler);
   await new Promise((resolve) => httpServer.listen({ port }, resolve));
 
-  console.log(`httpServer`, httpServer);
   console.log(
     `Graphql server ready http://localhost:${port}${apolloServer.graphqlPath}`
   );
